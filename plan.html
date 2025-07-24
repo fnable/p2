@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCare Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+		.column {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        label {
+            font-weight: bold;
+            width: 30%;
+        }
+        input, textarea, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 65%;
+        }
+		#imageUpload {
+            display: none;
+        }
+        .image-preview img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+		.radio-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 65%;
+        }
+		.buttons img {
+            cursor: pointer;
+            width: 70px;
+            height: auto;
+        }
+		.upload-btn img {
+            cursor: pointer;
+            width: 250px;
+            height: auto;
+        }
+		</style>
+</head>
+<body>
+    <div class="container">
+	
+        <h2>iCare Plan</h2>
+        
+        <form action="generate.php" method="post" enctype="multipart/form-data">
+		<div class="column">
+		<div class="buttons">
+            <img src="back.jpg" alt="Back" onclick="history.back()">
+            <img src="download.jpg" alt="Download">
+        </div>
+            <div class="image-preview">
+                <img id="imagePreview" src="#" alt="Image Preview" style="display: block;">
+            </div>
+			
+            <label for="imageUpload" class="upload-btn">
+                <img src="upload.jpg" alt="Upload Image">
+            </label>
+			
+            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" >
+            </div>
+
+            <div class="form-group">
+                <label for="birthdate">Birthdate:</label>
+                <input type="date" id="birthdate" name="birthdate" >
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" >
+            </div>
+
+            <div class="form-group">
+                <label>Sex:</label>
+                <div class="radio-group">
+                    <input type="radio" id="male" name="sex" value="male" >
+                    <label for="male">Male</label>
+                    <input type="radio" id="female" name="sex" value="female" >
+                    <label for="female">Female</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="civil_status">Civil Status:</label>
+                <input type="text" id="civil_status" name="civil_status" >
+            </div>
+
+            <div class="form-group">
+                <label for="nationality">Nationality:</label>
+                <input type="text" id="nationality" name="nationality" >
+            </div>
+
+            <div class="form-group">
+                <label for="religion">Religion:</label>
+                <input type="text" id="religion" name="religion" >
+            </div>
+
+            <div class="form-group" style="align-items: flex-start;">
+                <label for="diagnosis">Diagnosis:</label>
+                <textarea id="diagnosis" name="diagnosis" rows="4" ></textarea>
+            </div>
+			<div class="submit-btn">
+				<button type="submit" style="border: none; background: none; padding: 0;">
+					<img src="generate.jpg" alt="Submit">
+				</button>
+			</div>
+		</div>
+		
+		<div class="column">
+            <h3>Subjective Data</h3>
+            <div class="form-group" style="align-items: flex-start;">
+                <label for="subjective_data">Subjective Data:</label>
+                <textarea id="subjective_data" name="subjective_data" rows="4" ></textarea>
+            </div>
+            
+            <h3>Objective Data</h3>
+            <div class="form-group">
+                <label for="bp">BP:</label>
+                <input type="text" id="bp" name="bp" placeholder="Enter BP">
+            </div>
+			<div class="form-group">
+                <label for="pr">PR:</label>
+                <input type="text" id="pr" name="pr" placeholder="Enter PR">
+            </div>
+			<div class="form-group">
+                <label for="rr">RR:</label>
+                <input type="text" id="rr" name="rr" placeholder="Enter RR">
+            </div>
+			<div class="form-group">
+                <label for="bp">Temp:</label>
+                <input type="text" id="temp" name="temp" placeholder="Enter temperature">
+            </div>
+			<div class="form-group">
+                <label for="bp">Pain scale:</label>
+                <input type="text" id="pain" name="pain" placeholder="Enter pain level">
+            </div>
+			<div class="form-group" style="align-items: flex-start;">
+                <label for="other">Other:</label>
+                <textarea id="other" name="other" rows="2"></textarea>
+            </div>
+            <h3>Diagnosis</h3>
+			<div class="form-group">
+                <label for="medical_diagnosis">Medical Diagnosis:</label>
+                <select id="medical_diagnosis" name="medical_diagnosis" onchange="updateNursingDiagnosis()">
+					<option value="" disabled selected>Select</option>
+					<option value="Postpartum Hemorrhage">Postpartum Hemorrhage</option>
+					<option value="Postpartum Depression">Postpartum Depression</option>
+				</select>
+            </div>
+            <div class="form-group">
+                <label for="nursing_diagnosis">Nursing Diagnosis:</label>
+                <select id="nursing_diagnosis" name="nursing_diagnosis">
+					<option value="" disabled selected>Select</option>
+                </select>
+            </div>
+		</div>
+		<div class="column">
+			<h3>Planning</h3>
+            <div class="form-group">
+                <label for="pph">For Postpartum Hemorrhage:</label>
+                <select id="pph" name="pph[]" multiple>
+                    <option value=""disabled selected>Select</option>
+					<option value="The patient will verbalize understanding of postpartum hemorrhage management, including the importance of uterine massage and early signs of excessive bleeding, before the end of the shift.">The patient will verbalize understanding of postpartum hemorrhage management, including the importance of uterine massage and early signs of excessive bleeding, before the end of the shift.</option>
+					<option value="The patient will have a firm uterine tone within 3 hours after uterine massage and administration of prescribed uterotonics">The patient will have a firm uterine tone within 3 hours after uterine massage and administration of prescribed uterotonics</option>
+					<option value="The patient will demonstrate proper technique for self-assessment of lochia flow and notify healthcare providers of any concerning changes before discharge.">The patient will demonstrate proper technique for self-assessment of lochia flow and notify healthcare providers of any concerning changes before discharge.</option>
+					<option value="The patient will verbalize the importance of frequent monitoring of vital signs, including heart rate and blood pressure, to detect early signs of hemorrhagic shock, as evidenced by asking questions and participating in teaching by the end of the shift.">The patient will verbalize the importance of frequent monitoring of vital signs, including heart rate and blood pressure, to detect early signs of hemorrhagic shock, as evidenced by asking questions and participating in teaching by the end of the shift.</option>
+                </select>
+			</div>
+			<div class="form-group">
+				<label for="ppd">For Postpartum Depression:</label>
+                <select id="ppd" name="ppd[]" multiple>
+                    <option value=""disabled selected>Select</option>
+					<option value="The patient will verbalize at least one effective coping strategy to manage feelings of sadness or stress by the end of the shift.">The patient will verbalize at least one effective coping strategy to manage feelings of sadness or stress by the end of the shift.</option>
+					<option value="The patient will report improved mood and decreased feelings of fatigue within 48 hours, as evidenced by improved rest and interaction with others.">The patient will report improved mood and decreased feelings of fatigue within 48 hours, as evidenced by improved rest and interaction with others.</option>
+					<option value="The patient will express an intention to engage in a daily self-care routine to support mental health by the end of the shift.">The patient will express an intention to engage in a daily self-care routine to support mental health by the end of the shift.</option>
+					<option value="The patient will attend at least one follow-up mental health appointment or support group within one week of discharge to promote continued emotional well-being and seek professional help if needed.">The patient will attend at least one follow-up mental health appointment or support group within one week of discharge to promote continued emotional well-being and seek professional help if needed.</option>
+                </select>
+            </div>
+			<h3>Implentation</h3>
+            <div class="form-group">
+                <label for="intervention">Intervention:</label>
+                <select id="intervention" name="intervention[]" multiple>
+                    <option value=""disabled selected>Select</option>
+					<option value="Monitor and record pt’s vital signs frequently to detect early signs of hypovolemic shock.">Monitor and record pt’s vital signs frequently to detect early signs of hypovolemic shock.</option>
+					<option value="Assess uterine tone and fundal height every 15 minutes for the first hour, then as per protocol.">Assess uterine tone and fundal height every 15 minutes for the first hour, then as per protocol.</option>
+					<option value="Assess skin color, temperature, and level of consciousness for signs of poor perfusion.">Assess skin color, temperature, and level of consciousness for signs of poor perfusion.</option>
+					<option value="Perform fundal massage to stimulate uterine contractions and prevent atony">Perform fundal massage to stimulate uterine contractions and prevent atony</option>
+					<option value="Administer prescribed uterotonics as ordered.">Administer prescribed uterotonics as ordered.</option>
+					<option value="Administer oxygen therapy as prescribed if O2 saturation is low.">Administer oxygen therapy as prescribed if O2 saturation is low.</option>
+					<option value="Teach the patient and family members the importance of frequent monitoring of lochia and uterine firmness.">Teach the patient and family members the importance of frequent monitoring of lochia and uterine firmness.</option>
+					<option value="Educate the patient on how to perform fundal massage and when to seek medical attention">Educate the patient on how to perform fundal massage and when to seek medical attention</option>
+					<option value="Explain the importance of adequate hydration and proper nutrition to support recovery.">Explain the importance of adequate hydration and proper nutrition to support recovery.</option>
+					<option value="Educate on the importance of rest and avoiding strenuous activities to prevent further complications.">Educate on the importance of rest and avoiding strenuous activities to prevent further complications.</option>
+					<option value="Provide information on postpartum follow-up appointments and when to seek emergency care.">Provide information on postpartum follow-up appointments and when to seek emergency care.</option>
+					<option value="Assess the patient’s mood, affect, and coping mechanisms.">Assess the patient’s mood, affect, and coping mechanisms.</option>
+					<option value="Encourage the patient to express feelings and provide a non-judgmental, supportive environment.">Encourage the patient to express feelings and provide a non-judgmental, supportive environment.</option>
+					<option value="Promote bonding by encouraging skin-to-skin contact and breastfeeding if possible.">Promote bonding by encouraging skin-to-skin contact and breastfeeding if possible.</option>
+					<option value="Administer prescribed antidepressants or anxiolytics if ordered by the physician.">Administer prescribed antidepressants or anxiolytics if ordered by the physician.</option>
+					<option value="Refer the patient to a mental health specialist or support group if symptoms persist or worsen.">Refer the patient to a mental health specialist or support group if symptoms persist or worsen.</option>
+					<option value="Coordinate with a social worker or counselor to provide additional support and resources.">Coordinate with a social worker or counselor to provide additional support and resources.</option>
+					<option value="Educate the patient and family members about postpartum depression, its symptoms, and the importance of seeking help.">Educate the patient and family members about postpartum depression, its symptoms, and the importance of seeking help.</option>
+					<option value="Teach relaxation techniques such as deep breathing exercises, mindfulness, or journaling.">Teach relaxation techniques such as deep breathing exercises, mindfulness, or journaling.</option>
+					<option value="Encourage participation in postpartum support groups or therapy sessions.">Encourage participation in postpartum support groups or therapy sessions.</option>
+					<option value="Reinforce the importance of proper nutrition, hydration, and mild physical activity to support mental well-being.">Reinforce the importance of proper nutrition, hydration, and mild physical activity to support mental well-being.</option>
+                </select>
+            </div>
+			<h3>Evaluation</h3>
+            <div class="form-group">
+                <label for="Evaluation">Evaluation:</label>
+                <select id="Evaluation" name="Evaluation">
+					<option value="" disabled selected>Select</option>
+                    <option value="Goal Met">Goal Met</option>
+					<option value="Goal Partially Met">Goal Partially Met</option>
+					<option value="Goal Unmet">Goal Unmet</option>
+                </select>
+            </div>
+            <div class="form-group" style="align-items: flex-start;">
+                <label for="rationale">Rationale:</label>
+                <textarea id="rationale" name="rationale" rows="4" ></textarea>
+            </div>
+		
+
+            
+		</div>
+        </form>
+    </div>
+	<script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+		function updateNursingDiagnosis() {
+			var medicalDiagnosis = document.getElementById("medical_diagnosis").value;
+			var nursingDiagnosis = document.getElementById("nursing_diagnosis");
+    
+			nursingDiagnosis.innerHTML = '<option value="" disabled selected>Select</option>'; // Reset options
+
+			if (medicalDiagnosis === "Postpartum Hemorrhage") {
+				nursingDiagnosis.innerHTML += '<option value="Risk for Deficient Volume related to excessive blood loss.">Risk for Deficient Volume related to excessive blood loss.</option>';
+				nursingDiagnosis.innerHTML += '<option value="Risk for Shock related to excessive blood loss and decreased oxygen delivery to tissues.">Risk for Shock related to excessive blood loss and decreased oxygen delivery to tissues.</option>';
+			} else if (medicalDiagnosis === "Postpartum Depression") {
+				nursingDiagnosis.innerHTML += '<option value="Ineffective Coping related to hormonal changes, fatigue, and role transition as evidenced by persistent sadness, crying episodes, and feelings of helplessness.">Ineffective Coping related to hormonal changes, fatigue, and role transition as evidenced by persistent sadness, crying episodes, and feelings of helplessness.</option>';
+			}
+		}
+		
+    </script>
+</body>
+</html>
